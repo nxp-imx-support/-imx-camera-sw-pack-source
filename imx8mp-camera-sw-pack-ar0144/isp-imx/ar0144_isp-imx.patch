@@ -1,0 +1,97 @@
+diff --git a/imx/run.sh b/imx/run.sh
+index a9506d0..9d69dda 100755
+--- a/imx/run.sh
++++ b/imx/run.sh
+@@ -34,6 +34,8 @@ USAGE+="\tos08a20_1080p30hdr      - single os08a20 camera on MIPI-CSI1, 1920x108
+ USAGE+="\tdual_os08a20_1080p30hdr - dual os08a20 cameras on MIPI-CSI1/2, 1920x1080, 30 fps, HDR configuration\n"
+ USAGE+="\tos08a20_4khdr           - single os08a20 camera on MIPI-CSI1, 3840x2160, 15 fps, HDR configuration\n"
+ 
++USAGE+="\tar0144_1280         - single ar0144 camera on MIPI-CSI1, 1280x800\n"
++
+ # parse command line arguments
+ while [ "$1" != "" ]; do
+ 	case $1 in
+@@ -87,6 +89,12 @@ write_default_mode_files () {
+ 	echo "[mode.3]" >> DAA3840_MODES.txt
+ 	echo "xml = \"DAA3840_30MC_1080P-hdr.xml\"" >> DAA3840_MODES.txt
+ 	echo "dwe = \"dewarp_config/daA3840_30mc_1080P.json\"" >> DAA3840_MODES.txt
++
++	#AR0144  modes file
++        echo -n "" > AR0144_MODES.txt
++        echo "[mode.0]" >> AR0144_MODES.txt
++        echo "xml = \"AR0144_mono.xml\"" >> AR0144_MODES.txt
++        echo "dwe = \"dewarp_config/sensor_dwe_ar0144_config.json\"" >> AR0144_MODES.txt
+ }
+ 
+ # write the sensonr config file
+@@ -194,7 +202,7 @@ load_modules () {
+ write_default_mode_files
+ 
+ echo "Trying configuration \"$ISP_CONFIG\"..."
+-MODULES_TO_REMOVE=("basler-camera-driver-vvcam" "os08a20" "ov2775" "${MODULES[@]}")
++MODULES_TO_REMOVE=("basler-camera-driver-vvcam" "os08a20" "ov2775" "ar0144" "${MODULES[@]}")
+ case "$ISP_CONFIG" in
+ 		basler_4k )
+ 			MODULES=("basler-camera-driver-vvcam" "${MODULES[@]}")
+@@ -308,6 +316,15 @@ case "$ISP_CONFIG" in
+                          write_sensor_cfg_file "Sensor0_Entry.cfg" $CAM_NAME $DRV_FILE $MODE_FILE $MODE
+                          write_sensor_cfg_file "Sensor1_Entry.cfg" $CAM_NAME $DRV_FILE $MODE_FILE $MODE
+                          ;;
++                 ar0144_1280 )
++                         MODULES=("ar0144" "${MODULES[@]}")
++                         RUN_OPTION="CAMERA0"
++                         CAM_NAME="ar0144"
++                         DRV_FILE="ar0144.drv"
++                         MODE_FILE="AR0144_MODES.txt"
++                         MODE="0"
++                         write_sensor_cfg_file "Sensor0_Entry.cfg" $CAM_NAME $DRV_FILE $MODE_FILE $MODE
++                         ;;
+ 		 *)
+ 			echo "ISP configuration \"$ISP_CONFIG\" unsupported."
+ 			echo -e "$USAGE" >&2
+diff --git a/imx/start_isp.sh b/imx/start_isp.sh
+index d544b4c..21e851c 100755
+--- a/imx/start_isp.sh
++++ b/imx/start_isp.sh
+@@ -10,6 +10,7 @@ RUNTIME_DIR="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+ NR_DEVICE_TREE_BASLER=$(grep basler-camera-vvcam `find /sys/firmware/devicetree/base/soc@0/ -name compatible | grep i2c` -l | wc -l 2> /dev/null)
+ NR_DEVICE_TREE_OV5640=$(grep ov5640 `find /sys/firmware/devicetree/base/soc@0/ -name compatible | grep i2c` -l | wc -l 2> /dev/null)
+ NR_DEVICE_TREE_OS08A20=$(grep os08a20 `find /sys/firmware/devicetree/base/soc@0/ -name compatible | grep i2c` -l | wc -l 2> /dev/null)
++NR_DEVICE_TREE_AR0144=$(grep ar0144 `find /sys/firmware/devicetree/base/soc@0/ -name compatible | grep i2c` -l | wc -l 2> /dev/null)
+ 
+ 
+ # check if the basler device has been enabled in the device tree
+@@ -69,6 +70,15 @@ elif [ $NR_DEVICE_TREE_OS08A20 -eq 2 ]; then
+ 	# Available configurations: dual_Os08a20_1080p60, dual_Os08a20_1080p30hdr
+ 	exec ./run.sh -c dual_os08a20_1080p60 -lm
+ 
++elif [ $NR_DEVICE_TREE_AR0144 -eq 1 ]; then
++
++        echo "Starting isp_media_server for Single ar0144"
++
++        cd $RUNTIME_DIR
++        # Default configuration for AR0144: ar0144_1280
++        # Available configurations: ar0144_1280
++        exec ./run.sh -c ar0144_1280 -lm
++
+ else
+ 	# no device tree found exit with code no device or address
+ 	echo "No device tree found for Basler camera or os08a20, check dtb file!" >&2
+diff --git a/units/isi/CMakeLists.txt b/units/isi/CMakeLists.txt
+index 8cd95b5..4f98ef7 100755
+--- a/units/isi/CMakeLists.txt
++++ b/units/isi/CMakeLists.txt
+@@ -72,11 +72,13 @@ if (GENERATE_PARTITION_BUILD)
+ add_subdirectory( drv/OV2775 )
+ add_subdirectory( drv/OS08a20 )
+ add_subdirectory( drv/AR1335 )
++add_subdirectory( drv/AR0144 )
+ #add_subdirectory( drv/OV5630 )
+ ###add_subdirectory( drv/OV8810 )
+ #add_subdirectory( drv/OV14825 )
+ #add_subdirectory( drv/OV5640 )
+ else (GENERATE_PARTITION_BUILD)
+ add_subdirectory( drv/OS08a20 )
++add_subdirectory( drv/AR0144 )
+ endif (GENERATE_PARTITION_BUILD)
+ 

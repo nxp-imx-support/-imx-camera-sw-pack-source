@@ -1,0 +1,40 @@
+NXP Software Content Register
+
+Release Name:             imx8mp-camera-sw-pack-ar0144
+Date Created:             August-2024
+Package License:          GPL-2.0-only
+License File:             ./LICENSE.txt
+Version:                  LF6.6.3_P24.1
+Release location:         https://github.com/nxp-imx-support/imx-camera-sw-pack-source/imx8mp-camera-sw-pack-ar0144
+Description:              Enable ar0144 camera module to support ISP function on i.MX 8M Plus
+Origin:                   NXP (GPL-2.0-only, MIT)
+                          VeriSilicon Holdings Co., Ltd. (GPL-2.0-only, MIT)
+
+--------------------------------------------
+BSP Packages
+--------------------------------------------
+
+Patches for:              linux-imx.git
+Version:                  lf-6.6.3-1.0.0
+Source Location:          https://github.com/nxp-imx/linux-imx -b lf-6.6.3-1.0.0
+Outgoing License:         GPL-2.0 with Linux-syscall-note
+License File:             linux-imx/COPYING
+Package Category:         BSP
+Type of Content:          Source
+Description and comments: The Linux kernel with i.MX-specific drivers
+Origin:                   NXP (GPL-2.0-only)
+                          kernel.org (GPL-2.0) - https://www.kernel.org/
+
+--------------------------------------------
+Graphics Packages
+--------------------------------------------
+
+Patches for:              isp-vvcam.git
+Version:                  4.2.2.24.1
+Source Location:          https://github.com/nxp-imx/isp-vvcam -b lf-6.6.3_1.0.0
+Outgoing License:         GPL-2.0
+License File:             isp-vvcam/LICENSE
+Package Category:         Graphics
+Type of Content:          ISP Kernel Module source
+Description and comments: Kernel Loadable Module for ISP
+Origin:                   VeriSilicon Holdings Co., Ltd. (GPL-2.0)

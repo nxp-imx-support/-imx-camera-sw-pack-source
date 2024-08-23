@@ -1,0 +1,64 @@
+{
+  "SPDXID": "SPDXRef-DOCUMENT",
+  "spdxVersion": "SPDX-2.3",
+  "creationInfo": {
+    "created": "2024-08-23T21:19:43Z",
+    "creators": [
+      "Organization: NXP"
+    ],
+    "licenseListVersion": "3.20"
+  },
+  "name": "imx-camera-sw-pack-source-LF6.6.3_P24.1",
+  "dataLicense": "CC0-1.0",
+  "documentNamespace": "https://nxp.com/spdx/imx-camera-sw-pack-source",
+  "packages": [
+    {
+      "SPDXID": "SPDXRef-package-8c5fea36-7208-43c8-bf43-57ebe5a4342e",
+      "name": "imx-camera-sw-pack-source",
+      "versionInfo": "LF6.6.3_P24.1",
+      "licenseConcluded": "(GPL-2.0-only)",
+      "licenseDeclared": "(GPL-2.0-only)",
+      "downloadLocation": "https://github.com/nxp-imx-support/imx-camera-sw-pack-source",
+      "originator": "Organization: NXP",
+      "supplier": "Organization: NXP",
+      "externalRefs": [],
+      "filesAnalyzed": false
+    },
+    {
+      "SPDXID": "SPDXRef-package-253afbbb-001a-4d02-8e47-3fd513794abf",
+      "name": "Linux Kernel",
+      "versionInfo": "5.4.28",
+      "licenseConcluded": "GPL-2.0-only",
+      "licenseDeclared": "GPL-2.0-only",
+      "homepage": "NOASSERTION",
+      "downloadLocation": "NOASSERTION",
+      "originator": "Organization: centos",
+      "supplier": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:rpm/centos/raspberrypi2@5.4.28-v7l.1.el7?arch=armv7hl",
+          "referenceType": "purl"
+        },
+        {
+          "referenceCategory": "OTHER",
+          "referenceLocator": "b5b494d8-ea6a-4c72-862d-e7c8c9137ad1",
+          "referenceType": "BlackDuck-ComponentOrigin"
+        }
+      ],
+      "filesAnalyzed": false
+    }
+  ],
+  "relationships": [
+    {
+      "spdxElementId": "SPDXRef-DOCUMENT",
+      "relationshipType": "DESCRIBES",
+      "relatedSpdxElement": "SPDXRef-package-8c5fea36-7208-43c8-bf43-57ebe5a4342e"
+    },
+    {
+      "spdxElementId": "SPDXRef-package-8c5fea36-7208-43c8-bf43-57ebe5a4342e",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-package-253afbbb-001a-4d02-8e47-3fd513794abf"
+    }
+  ]
+}
